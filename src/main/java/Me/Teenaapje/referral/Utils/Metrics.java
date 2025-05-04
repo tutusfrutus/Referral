@@ -49,7 +49,7 @@ public class Metrics {
     private static final String URL = "https://bStats.org/submitData/bukkit";
 
     // Is bStats enabled on this server?
-    private boolean enabled;
+    private final boolean enabled;
 
     // Should failed requests be logged?
     private static boolean logFailedRequests;
@@ -329,7 +329,7 @@ public class Metrics {
             throw new IllegalAccessException("This method must not be called from the main thread!");
         }
         if (logSentData) {
-            plugin.getLogger().info("Sending data to bStats: " + data.toString());
+            plugin.getLogger().info("Sending data to bStats: " + data);
         }
         HttpsURLConnection connection = (HttpsURLConnection) new URL(URL).openConnection();
 
@@ -362,7 +362,7 @@ public class Metrics {
         }
         bufferedReader.close();
         if (logResponseStatusText) {
-            plugin.getLogger().info("Sent data to bStats and received response: " + builder.toString());
+            plugin.getLogger().info("Sent data to bStats and received response: " + builder);
         }
     }
 
