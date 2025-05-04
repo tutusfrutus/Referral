@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import Me.Teenaapje.Referral.ReferralCore;
 import Me.Teenaapje.Referral.Utils.Utils;
 
+import java.util.Objects;
+
 public class CommandBase {
 	ReferralCore core = ReferralCore.core;
 	
@@ -20,7 +22,7 @@ public class CommandBase {
 	}
 	
 	public boolean HasPermission (CommandSender sender, boolean sendmsg) {
-		if (permission == "") {
+		if (Objects.equals(permission, "")) {
 			return true;
 		}
 		
