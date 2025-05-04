@@ -1,12 +1,12 @@
-package Me.Teenaapje.Referral.Commands;
+package me.teenaapje.referral.commands;
 
+import me.teenaapje.referral.ReferralCore;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import Me.Teenaapje.Referral.ReferralCore;
-import Me.Teenaapje.Referral.Utils.Utils;
+import me.teenaapje.referral.utils.Utils;
 
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package Me.Teenaapje.Referral.Utils;
+package me.teenaapje.referral.utils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

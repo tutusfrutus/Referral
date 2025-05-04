@@ -1,12 +1,12 @@
-package Me.Teenaapje.Referral.Commands;
+package me.teenaapje.referral.commands;
 
 import java.util.List;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import Me.Teenaapje.Referral.Utils.TopPlayer;
-import Me.Teenaapje.Referral.Utils.Utils;
+import me.teenaapje.referral.utils.TopPlayer;
+import me.teenaapje.referral.utils.Utils;
 
 public class RefTop extends CommandBase {
 	// init class

@@ -1,12 +1,13 @@
-package Me.Teenaapje.Referral.Utils;
+package me.teenaapje.referral.utils;
 
+import me.teenaapje.referral.ReferralCore;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import me.clip.placeholderapi.PlaceholderAPI;
-import Me.Teenaapje.Referral.ReferralCore;
 
 public class Utils {	
 	// send message to player
@@ -25,7 +26,7 @@ public class Utils {
 			
 			return true;
 		} catch (Exception e) {
-			// TODO: handle exception?
+			Bukkit.getLogger().warning("Something went wrong sending message to player with exception: " + e);
 			return false;
 		}
 	}
@@ -47,7 +48,7 @@ public class Utils {
 			
 			return true;
 		} catch (Exception e) {
-			// TODO: handle exception?
+			Bukkit.getLogger().warning("Something went wrong sending message to player with exception: " + e);
 			return false;
 		}
 	}
@@ -89,9 +90,6 @@ public class Utils {
 	}
 	
 	public static void Console(String text) {
-		System.out.print(ChatColor.translateAlternateColorCodes('&', text));
+		Bukkit.getLogger().info(ChatColor.translateAlternateColorCodes('&', text));
 	}
-	
-	
-	
 }

@@ -1,11 +1,10 @@
-package Me.Teenaapje.Referral.Utils;
+package me.teenaapje.referral.utils;
 
 import java.util.List;
 
+import me.teenaapje.referral.ReferralCore;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import Me.Teenaapje.Referral.ReferralCore;
 
 public class ConfigManager {
 	ReferralCore core = ReferralCore.core;

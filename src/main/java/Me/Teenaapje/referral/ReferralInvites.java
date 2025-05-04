@@ -1,10 +1,10 @@
-package Me.Teenaapje.Referral;
+package me.teenaapje.referral;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.bukkit.entity.Player;
 
-import Me.Teenaapje.Referral.Utils.Utils;
+import me.teenaapje.referral.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;

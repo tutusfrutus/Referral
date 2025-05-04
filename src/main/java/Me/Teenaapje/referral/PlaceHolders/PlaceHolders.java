@@ -1,12 +1,12 @@
-package Me.Teenaapje.Referral.PlaceHolders;
+package me.teenaapje.referral.placeholders;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import Me.Teenaapje.Referral.ReferralCore;
+import me.teenaapje.referral.ReferralCore;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
-public class PlaceHolders extends PlaceholderExpansion{
+public class PlaceHolders extends PlaceholderExpansion {
 	/**
      * Because this is an internal class,
      * you must override this method to let PlaceholderAPI know to not unregister your expansion class when

@@ -1,9 +1,10 @@
-package Me.Teenaapje.Referral.Commands;
+package me.teenaapje.referral.commands;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import me.teenaapje.referral.ReferralCore;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,7 +12,6 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import Me.Teenaapje.Referral.ReferralCore;
 
 public class CommandManager implements CommandExecutor, TabExecutor {
 	ReferralCore core = ReferralCore.core;

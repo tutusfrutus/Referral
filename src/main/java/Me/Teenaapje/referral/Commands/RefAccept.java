@@ -1,11 +1,11 @@
-package Me.Teenaapje.Referral.Commands;
+package me.teenaapje.referral.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import Me.Teenaapje.Referral.Utils.ConfigManager;
-import Me.Teenaapje.Referral.Utils.Utils;
+import me.teenaapje.referral.utils.ConfigManager;
+import me.teenaapje.referral.utils.Utils;
 
 public class RefAccept extends CommandBase {
 	public RefAccept() {
@@ -83,7 +83,6 @@ public class RefAccept extends CommandBase {
 		} catch (Exception e) {
 			e.fillInStackTrace();
 		}
-		
 		return true;
 	}
 }

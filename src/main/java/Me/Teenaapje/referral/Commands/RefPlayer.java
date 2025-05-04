@@ -1,11 +1,11 @@
-package Me.Teenaapje.Referral.Commands;
+package me.teenaapje.referral.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import Me.Teenaapje.Referral.Utils.ConfigManager;
-import Me.Teenaapje.Referral.Utils.Utils;
+import me.teenaapje.referral.utils.ConfigManager;
+import me.teenaapje.referral.utils.Utils;
 
 public class RefPlayer extends CommandBase {
 	// init class
@@ -25,7 +25,6 @@ public class RefPlayer extends CommandBase {
 	        return false;
 	    } else if (args.length < 1) {
 	        Utils.SendMessage(player, core.config.missingPlayer);
-
 	        return false;
 	    } 
 		
@@ -105,8 +104,7 @@ public class RefPlayer extends CommandBase {
 		    	// give the player their rewards
 			    core.UseCommands(ConfigManager.playerRefers, target);
 			    core.UseCommands(ConfigManager.playerReferd, player); 
-			    
-			    
+
 			    if (ConfigManager.useMileStoneRewards) {
 				    // get the targets info
 				    String playerUUID = target.getUniqueId().toString();
@@ -124,7 +122,6 @@ public class RefPlayer extends CommandBase {
 				e.fillInStackTrace();
 			}  	
 		}
- 		
 		return true;
 	}
 }

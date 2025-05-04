@@ -1,17 +1,17 @@
-package Me.Teenaapje.Referral;
+package me.teenaapje.referral;
 
 import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import Me.Teenaapje.Referral.Commands.CommandManager;
-import Me.Teenaapje.Referral.Database.Database;
-import Me.Teenaapje.Referral.PlaceHolders.PlaceHolders;
-import Me.Teenaapje.Referral.Utils.ConfigManager;
-import Me.Teenaapje.Referral.Utils.Utils;
+import me.teenaapje.referral.commands.CommandManager;
+import me.teenaapje.referral.database.Database;
+import me.teenaapje.referral.placeholders.PlaceHolders;
+import me.teenaapje.referral.utils.ConfigManager;
+import me.teenaapje.referral.utils.Utils;
 
-public class ReferralCore extends JavaPlugin{
+public class ReferralCore extends JavaPlugin {
 	public static ReferralCore core;
 	
 	public ConfigManager config;
@@ -39,7 +39,7 @@ public class ReferralCore extends JavaPlugin{
 		
 		new ReferralEvents();
 		
-		Utils.Console("[Referrel] Initialized - Enjoy");
+		Utils.Console("[Referral] Initialized");
 	}
 	
 	public void onDisable() {

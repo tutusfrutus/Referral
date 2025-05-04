@@ -1,12 +1,12 @@
-package Me.Teenaapje.Referral.Commands;
+package me.teenaapje.referral.commands;
 
+import me.teenaapje.referral.database.Database;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import Me.Teenaapje.Referral.ReferralInvites;
-import Me.Teenaapje.Referral.Database.Database;
-import Me.Teenaapje.Referral.Utils.ConfigManager;
-import Me.Teenaapje.Referral.Utils.Utils;
+import me.teenaapje.referral.ReferralInvites;
+import me.teenaapje.referral.utils.ConfigManager;
+import me.teenaapje.referral.utils.Utils;
 
 public class RefReload extends CommandBase {
 	// init class
@@ -29,7 +29,6 @@ public class RefReload extends CommandBase {
 		core.config = new ConfigManager();
 				
 		Utils.SendMessage(sender, "&6[Referral] &fReloaded");
-		
 		return true;
 	}
 }

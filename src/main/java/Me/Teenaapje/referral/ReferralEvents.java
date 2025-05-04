@@ -1,12 +1,12 @@
-package Me.Teenaapje.Referral;
+package me.teenaapje.referral;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import Me.Teenaapje.Referral.Utils.ConfigManager;
-import Me.Teenaapje.Referral.Utils.Utils;
+import me.teenaapje.referral.utils.ConfigManager;
+import me.teenaapje.referral.utils.Utils;
 
 public class ReferralEvents  implements Listener{
 	ReferralCore core = ReferralCore.core;

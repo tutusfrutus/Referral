@@ -1,4 +1,4 @@
-package Me.Teenaapje.Referral.Utils;
+package me.teenaapje.referral.utils;
 
 public class TopPlayer {
 	public String playerUUID;

@@ -1,10 +1,10 @@
-package Me.Teenaapje.Referral.Commands;
+package me.teenaapje.referral.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import Me.Teenaapje.Referral.Utils.Utils;
+import me.teenaapje.referral.utils.Utils;
 
 public class RefReject extends CommandBase {
 	public RefReject() {

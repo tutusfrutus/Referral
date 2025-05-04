@@ -1,4 +1,4 @@
-package Me.Teenaapje.Referral;
+package me.teenaapje.referral;
 
 import java.util.ArrayList;
 import java.util.List;
