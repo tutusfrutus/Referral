@@ -39,16 +39,16 @@ public class ReferralCore extends JavaPlugin {
 		
 		new ReferralEvents();
 		
-		Utils.Console("[Referral] Initialized");
+		Utils.logInfo("[Referral] Initialized");
 	}
 	
 	public void onDisable() {
-		db.CloseConnection();
+		db.closeConnection();
 	}
 	
 	
 	@SuppressWarnings("deprecation")
-	public Player GetPlayer(String name) {
+	public Player getPlayer(String name) {
 		Player player = this.getServer().getPlayer(name);
 		if (player != null) {
 			return player;
@@ -57,17 +57,12 @@ public class ReferralCore extends JavaPlugin {
 		return getServer().getOfflinePlayer(name).getPlayer();
 	}
 	
-	public void UseCommands(List<?> commands, Player player) {
-		for (int i = 0; i < commands.size(); i++) {
-			String command = (String) commands.get(i);
-									
-			getServer().getScheduler().runTask(this, new Runnable() {
-				@Override
-				public void run() {
-					getServer().dispatchCommand(getServer().getConsoleSender(), command.replace("<player>", player.getName()));
-				}
-		    });
-		}
+	public void useCommands(List<?> commands, Player player) {
+        for (Object o : commands) {
+            String command = (String) o;
+            getServer().getScheduler().runTask(this, () ->
+					getServer().dispatchCommand(getServer().getConsoleSender(),
+							command.replace("<player>", player.getName())));
+        }
 	}
-	
 }

@@ -11,18 +11,18 @@ import me.clip.placeholderapi.PlaceholderAPI;
 
 public class Utils {	
 	// send message to player
-	public static boolean SendMessage(CommandSender sendTo, String text) {
-		return SendMessage(sendTo, text, null);
+	public static boolean sendMessage(CommandSender sendTo, String text) {
+		return sendMessage(sendTo, text, null);
 	}
-	public static boolean SendMessage(CommandSender sendTo, String text, Player playerPlaceholder) {
+	public static boolean sendMessage(CommandSender sendTo, String text, Player playerPlaceholder) {
 		try {
 			// get placeholder of other player
 			if (playerPlaceholder != null) {
-				text = SetPlaceHolders(playerPlaceholder, text);
+				text = setPlaceholders(playerPlaceholder, text);
 			}
 			
 			// colorcode and send
-			sendTo.sendMessage(ColorCode(text));
+			sendTo.sendMessage(colorCode(text));
 			
 			return true;
 		} catch (Exception e) {
@@ -31,20 +31,20 @@ public class Utils {
 		}
 	}
 	
-	public static boolean SendMessage(Player player, String text) {
-		return SendMessage(player, text, null);
+	public static boolean sendMessage(Player player, String text) {
+		return sendMessage(player, text, null);
 	}
-	public static boolean SendMessage(Player player, String text, Player playerPlaceholder) {
+	public static boolean sendMessage(Player player, String text, Player playerPlaceholder) {
 		try {
 			// get placeholder of other player
 			if (playerPlaceholder != null) {
-				text = SetPlaceHolders(playerPlaceholder, text);
+				text = setPlaceholders(playerPlaceholder, text);
 			} else {
-				text = SetPlaceHolders(player, text);			
+				text = setPlaceholders(player, text);
 			}
 			
 			// colorcode and send
-			player.sendMessage(ColorCode(text));
+			player.sendMessage(colorCode(text));
 			
 			return true;
 		} catch (Exception e) {
@@ -53,23 +53,23 @@ public class Utils {
 		}
 	}
 	
-	public static String SetPlaceHolders(Player player, String text) {
+	public static String setPlaceholders(Player player, String text) {
 		if (ConfigManager.placeholderAPIEnabled) {
 			return PlaceholderAPI.setPlaceholders(player, text);
 		}
 		
-		return text.replace("%referral_total%", Integer.toString(ReferralCore.core.db.GetReferrals(player.getUniqueId().toString(), player.getName())))
-				   .replace("%referral_refed%", String.valueOf(ReferralCore.core.db.PlayerReferrald(player.getUniqueId().toString(), player.getName())))
-				   .replace("%referral_referred_by%",ReferralCore.core.db.PlayerReferraldByName(player.getUniqueId().toString()));
+		return text.replace("%referral_total%", Integer.toString(ReferralCore.core.db.getReferrals(player.getUniqueId().toString(), player.getName())))
+				   .replace("%referral_refed%", String.valueOf(ReferralCore.core.db.playerReferred(player.getUniqueId().toString(), player.getName())))
+				   .replace("%referral_referred_by%",ReferralCore.core.db.playerReferredByName(player.getUniqueId().toString()));
 	}
 	
 	/// Color code text
-	public static String ColorCode(String text) {
+	public static String colorCode(String text) {
 		return ChatColor.translateAlternateColorCodes('&', text);
 	}
 	
 	// create text component
-	public static TextComponent CreateTextComponent(String text, ChatColor color, boolean bold, ClickEvent.Action action, String runCommand) {
+	public static TextComponent createTextComponent(String text, ChatColor color, boolean bold, ClickEvent.Action action, String runCommand) {
 		TextComponent component = new TextComponent(text);
 		component.setColor(color);
 		component.setBold(bold);
@@ -78,18 +78,31 @@ public class Utils {
 	}
 	
 	// check if its the same player
-	public static boolean IsPlayerSelf(Player player, String name) {
+	public static boolean isPlayerSelf(Player player, String name) {
 		return player.getName().toLowerCase().compareTo(name.toLowerCase()) == 0;
 	}
-	public static boolean IsPlayerSelf(Player a, Player b) {
+	public static boolean isPlayerSelf(Player a, Player b) {
 		return a == b;
 	}
 	
-	public static boolean IsConsole(CommandSender sender) {
+	public static boolean isConsole(CommandSender sender) {
 		return !(sender instanceof Player);
 	}
-	
-	public static void Console(String text) {
-		Bukkit.getLogger().info(ChatColor.translateAlternateColorCodes('&', text));
+
+	public static void logInfo(String text) {
+		Bukkit.getLogger().info("[Referral] - " + text);
 	}
+
+	public static void logInfo(String text, String exception) {
+		Bukkit.getLogger().info("[Referral] - " + text + " throws the following stacktrace: " + exception);
+	}
+
+	public static void logError(String text) {
+		Bukkit.getLogger().warning("[Referral] - " + text);
+	}
+
+	public static void logError(String text, String exception) {
+		Bukkit.getLogger().info("[Referral] - " + text + " throws the following stacktrace: " + exception);
+	}
+
 }

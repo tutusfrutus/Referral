@@ -21,7 +21,7 @@ public class ReferralEvents  implements Listener{
 		
 		
 		if (!player.hasPlayedBefore() && ConfigManager.enableNotification) {
-			Utils.SendMessage(player, core.config.referNotification);
+			Utils.sendMessage(player, core.config.referNotification);
 		}
 	}
 	

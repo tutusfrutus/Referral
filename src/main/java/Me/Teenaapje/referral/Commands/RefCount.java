@@ -18,25 +18,25 @@ public class RefCount extends CommandBase {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// check arguments
 		if (args.length > 2) {
-	        Utils.SendMessage(sender, core.config.tooManyArgs);
+	        Utils.sendMessage(sender, core.config.tooManyArgs);
 	        return false;
 	    } else if (args.length < 2) {
 	    	// check if is player
-			if (Utils.IsConsole(sender)) {
-		        Utils.SendMessage(sender, core.config.missingPlayer);
+			if (Utils.isConsole(sender)) {
+		        Utils.sendMessage(sender, core.config.missingPlayer);
 				return false;
 			}
 			
-			Utils.SendMessage((Player)sender, core.config.playerTotal);
+			Utils.sendMessage((Player)sender, core.config.playerTotal);
 	    } else {
 	    	// check if the player is online
-			Player target = core.GetPlayer(args[1]);
+			Player target = core.getPlayer(args[1]);
 	    	
 			if (target == null) {
-				Utils.SendMessage(sender, core.config.notOnline);
+				Utils.sendMessage(sender, core.config.notOnline);
 				return false;
 			} else {
-				Utils.SendMessage(sender, core.config.playerTotal, target);
+				Utils.sendMessage(sender, core.config.playerTotal, target);
 				
 			}
 	    }	

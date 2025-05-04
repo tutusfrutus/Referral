@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import me.teenaapje.referral.utils.ConfigManager;
 import me.teenaapje.referral.utils.Utils;
 
+import java.util.Objects;
+
 public class RefPlayer extends CommandBase {
 	// init class
 	public RefPlayer() {
@@ -21,72 +23,72 @@ public class RefPlayer extends CommandBase {
 
 		// check arguments
 		if (args.length > 1) {
-	        Utils.SendMessage(player, core.config.tooManyArgs);
+	        Utils.sendMessage(player, core.config.tooManyArgs);
 	        return false;
 	    } else if (args.length < 1) {
-	        Utils.SendMessage(player, core.config.missingPlayer);
+	        Utils.sendMessage(player, core.config.missingPlayer);
 	        return false;
 	    } 
 		
 		// Check if player already referred a player
-		if (core.db.PlayerReferrald(player.getUniqueId().toString(), player.getName())) {
-	        Utils.SendMessage(player, core.config.alreadyRefedSelf);
+		if (core.db.playerReferred(player.getUniqueId().toString(), player.getName())) {
+	        Utils.sendMessage(player, core.config.alreadyRefedSelf);
 	        return false;
 		}
 		
 		// check if the player is online
-		Player target = core.GetPlayer(args[0]);
+		Player target = core.getPlayer(args[0]);
 	    if (target == null) {
-	        Utils.SendMessage(player, core.config.notOnline, target);
+	        Utils.sendMessage(player, core.config.notOnline, target);
 	        return false;
 	    }
 	    
 		// check if the player wants to referral him self
-	    if (Utils.IsPlayerSelf(player, target)) {
-			Utils.SendMessage(player, core.config.referSelf);
+	    if (Utils.isPlayerSelf(player, target)) {
+			Utils.sendMessage(player, core.config.referSelf);
 			return false;
 		}
 	    
 	    
 	    // Check if player is referred
- 		if (!ConfigManager.canReferEachOther && core.db.PlayerReferrald(target.getUniqueId().toString(), target.getName())) {
- 			String refedUUID = core.db.PlayerReferraldBy(target.getUniqueId().toString());
+ 		if (!ConfigManager.canReferEachOther && core.db.playerReferred(target.getUniqueId().toString(), target.getName())) {
+ 			String refedUUID = core.db.playerReferredBy(target.getUniqueId().toString());
  			// Check if the player try to refer each other
  			if (refedUUID != null && refedUUID.equalsIgnoreCase(player.getUniqueId().toString())) {			
- 				Utils.SendMessage(player, core.config.refEachOther);
+ 				Utils.sendMessage(player, core.config.refEachOther);
  	            return false;
  			}
  		}
  		
- 		float playTime = (player.getLastPlayed() - player.getFirstPlayed()) / 60000;
+ 		float playTime = (float) (player.getLastPlayed() - player.getFirstPlayed()) / 60000;
  		
  		// Check if server uses time limit if so is player in time?
         if (ConfigManager.useReferralTimeLimit && playTime > ConfigManager.referralTimeLimit) {
-			Utils.SendMessage(player, core.config.referTimeOut);
+			Utils.sendMessage(player, core.config.referTimeOut);
 			return false;
 		}
  		
         // Check if server uses time limit if so did the player play enough
         if (ConfigManager.useReferralMinPlay && playTime < ConfigManager.referralMinPlay) {
-			Utils.SendMessage(player, core.config.referMinPlay);
+			Utils.sendMessage(player, core.config.referMinPlay);
 			return false;
 		}
  		
         // Check if server uses max same ip
         if (ConfigManager.useSameIPLimit) {
-        	String hostName = player.getAddress().getHostName();
+        	String hostName = Objects.requireNonNull(player.getAddress()).getHostName();
         	
 	        // Check if server uses time limit if so is player in time?
 	        if (ConfigManager.maxSameIP == 0) {
 	        	// check if users have the same ip
-	        	if (hostName.compareTo(target.getAddress().getHostName()) == 0) {
+	        	if (hostName.compareTo(Objects.requireNonNull(target.getAddress()).getHostName()) == 0) {
 	        		// cant use the same network
-	    			Utils.SendMessage(player, core.config.maxIP);
+	    			Utils.sendMessage(player, core.config.maxIP);
 					return false;
 		        }
-			} else if (ConfigManager.maxSameIP <= core.db.GetUsedRefIP(player.getUniqueId().toString(), hostName)) {
+			} else if (ConfigManager.maxSameIP <= core.db.getUsedReferralIP(player.getUniqueId().toString(), hostName)) {
 				// cant use the same network
-    			Utils.SendMessage(player, core.config.maxIP);
+    			Utils.sendMessage(player, core.config.maxIP);
 				return false;
 			}
         }
@@ -94,28 +96,28 @@ public class RefPlayer extends CommandBase {
         // Need to use confirm?
 	    if (ConfigManager.usePlayerConfirm) {
 		    // Add player to list send a notification
-		    core.rInvites.AddToList(target.getName(), player.getName());
+		    core.rInvites.addToList(target.getName(), player.getName());
 		} else { // just five
 		    try { 
-		    	core.db.ReferralPlayer(player, target);
+		    	core.db.referralPlayer(player, target);
 		    	
-    			Utils.SendMessage(target, core.config.referring);
+    			Utils.sendMessage(target, core.config.referring);
 
 		    	// give the player their rewards
-			    core.UseCommands(ConfigManager.playerRefers, target);
-			    core.UseCommands(ConfigManager.playerReferd, player); 
+			    core.useCommands(ConfigManager.playerRefers, target);
+			    core.useCommands(ConfigManager.playerReferd, player);
 
 			    if (ConfigManager.useMileStoneRewards) {
 				    // get the targets info
 				    String playerUUID = target.getUniqueId().toString();
 				    String playerName = target.getName();
 				    
-				    int playerLastReward = core.db.GetLastReward(playerUUID, playerName);
-				    int playerReferrals = core.db.GetReferrals(playerUUID, playerName);
+				    int playerLastReward = core.db.getLastReward(playerUUID, playerName);
+				    int playerReferrals = core.db.getReferrals(playerUUID, playerName);
 				    
 				    // check if he has a new milestone reward
-				    if (core.milestone.HasAReward(playerLastReward, playerReferrals)) {
-				    	core.UseCommands(core.milestone.GetRewards(playerReferrals), target);
+				    if (core.milestone.hasReward(playerLastReward, playerReferrals)) {
+				    	core.useCommands(core.milestone.getRewards(playerReferrals), target);
 					}
 			    }
 			} catch (Exception e) {

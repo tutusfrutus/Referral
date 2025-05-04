@@ -58,7 +58,6 @@ public class PlaceHolders extends PlaceholderExpansion {
     /**
      * This is the version of the expansion.
      * <br>You don't have to use numbers, since it is set as a String.
-     *
      * For convienience do we return the version from the plugin.yml
      *
      * @return The version as a String.
@@ -74,16 +73,13 @@ public class PlaceHolders extends PlaceholderExpansion {
             return "";
         }
 
-        if(params.equals("total")) {
-            return Integer.toString(ReferralCore.core.db.GetReferrals(p.getUniqueId().toString(), p.getName()));
-        }
-        
-        if(params.equals("refed")) {
-            return Boolean.toString(ReferralCore.core.db.PlayerReferrald(p.getUniqueId().toString(), p.getName()));
-        }
-
-        if(params.equals("referred_by")) {
-            return ReferralCore.core.db.PlayerReferraldByName(p.getUniqueId().toString());
+        switch (params) {
+            case "total":
+                return Integer.toString(ReferralCore.core.db.getReferrals(p.getUniqueId().toString(), p.getName()));
+            case "refed":
+                return Boolean.toString(ReferralCore.core.db.playerReferred(p.getUniqueId().toString(), p.getName()));
+            case "referred_by":
+                return ReferralCore.core.db.playerReferredByName(p.getUniqueId().toString());
         }
 
         return null;
@@ -95,16 +91,13 @@ public class PlaceHolders extends PlaceholderExpansion {
             return "";
         }
 
-        if(params.equals("total")) {
-            return Integer.toString(ReferralCore.core.db.GetReferrals(p.getUniqueId().toString(), p.getName()));
-        }
-
-        if(params.equals("refed")) {
-            return Boolean.toString(ReferralCore.core.db.PlayerReferrald(p.getUniqueId().toString(), p.getName()));
-        }
-
-        if(params.equals("referred_by")) {
-            return ReferralCore.core.db.PlayerReferraldByName(p.getUniqueId().toString());
+        switch (params) {
+            case "total":
+                return Integer.toString(ReferralCore.core.db.getReferrals(p.getUniqueId().toString(), p.getName()));
+            case "refed":
+                return Boolean.toString(ReferralCore.core.db.playerReferred(p.getUniqueId().toString(), p.getName()));
+            case "referred_by":
+                return ReferralCore.core.db.playerReferredByName(p.getUniqueId().toString());
         }
 
         return null;

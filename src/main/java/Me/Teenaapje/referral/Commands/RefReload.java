@@ -20,15 +20,15 @@ public class RefReload extends CommandBase {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// reload config
 		core.reloadConfig();
-		core.milestone.LoadRewards();
+		core.milestone.loadRewards();
 		
 		// reload things
-		core.db.CloseConnection();
+		core.db.closeConnection();
 		core.db = new Database();
 		core.rInvites = new ReferralInvites();		
 		core.config = new ConfigManager();
 				
-		Utils.SendMessage(sender, "&6[Referral] &fReloaded");
+		Utils.sendMessage(sender, "&6[Referral] &fReloaded");
 		return true;
 	}
 }

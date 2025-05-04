@@ -18,66 +18,62 @@ public class ReferralInvites {
 	
 	// init ReferralInvites
 	public ReferralInvites () {
-		referInvites = new ArrayList<Refer>();
+		referInvites = new ArrayList<>();
 	}
 	
 	// add and send invite
-	public boolean AddToList(String to, String from) {
-		Player fromPlayer = core.GetPlayer(from);
+	public void addToList(String to, String from) {
+		Player fromPlayer = core.getPlayer(from);
 		
 		// check if already exists
-		if (IsInList(to, from)) {
-			Utils.SendMessage(fromPlayer, core.config.alreadySendRef);
-			return false;
+		if (isInList(to, from)) {
+			Utils.sendMessage(fromPlayer, core.config.alreadySendRef);
+			return;
 		}
 		
 		// check if it is the same player
-		Player toPlayer = core.GetPlayer(to);
+		Player toPlayer = core.getPlayer(to);
 		if (fromPlayer == toPlayer) {
 			//refp.sendMessage(Utils.chatConsole(main.util.referSelf));
-			Utils.SendMessage(fromPlayer, core.config.alreadySendRef);
-			return false;
+			Utils.sendMessage(fromPlayer, core.config.alreadySendRef);
+			return;
 		}
 		
 		// add to list
 		referInvites.add(new Refer(to, from));
 		
 		// get the buttons
-		TextComponent accept  = Utils.CreateTextComponent(core.config.accept, ChatColor.GREEN, true, ClickEvent.Action.RUN_COMMAND, "/ref accept " + from);
-		TextComponent decline = Utils.CreateTextComponent(core.config.decline,  ChatColor.RED, true, ClickEvent.Action.RUN_COMMAND, "/ref reject " + from);
+		TextComponent accept  = Utils.createTextComponent(core.config.accept, ChatColor.GREEN, true, ClickEvent.Action.RUN_COMMAND, "/ref accept " + from);
+		TextComponent decline = Utils.createTextComponent(core.config.decline,  ChatColor.RED, true, ClickEvent.Action.RUN_COMMAND, "/ref reject " + from);
 		
 		// send invite
-		Utils.SendMessage(toPlayer, core.config.youGotRefer, fromPlayer);
+		Utils.sendMessage(toPlayer, core.config.youGotRefer, fromPlayer);
 		toPlayer.spigot().sendMessage(accept, decline);
 		
 		// notify that it has been sned
-		Utils.SendMessage(fromPlayer, core.config.youSendRequest, toPlayer);		
-		
-		return true;
+		Utils.sendMessage(fromPlayer, core.config.youSendRequest, toPlayer);
+
 	}
 	
 	// remove from list
-	public boolean RemoveFromList (String ref, String refer) {
+	public void removeFromList(String ref, String refer) {
 		Iterator<Refer> itr = referInvites.iterator();  
         while(itr.hasNext()){  
-        	Refer st=(Refer)itr.next();     
+        	Refer st= itr.next();
             if (st.ref.contains(ref) && st.refer.contains(refer)) {
             	itr.remove();
-            	return true;
+            	return;
 			}
-        }   
-        
-        return false;
+        }
+
 	}
 	
 	// is in list
-	public boolean IsInList (String ref,String refer) {
-	    Iterator<Refer> itr = referInvites.iterator();  
-        while(itr.hasNext()){  
-        	Refer st=(Refer)itr.next();              
+	public boolean isInList(String ref, String refer) {
+        for (Refer st : referInvites) {
             if (st.ref.toLowerCase().compareTo(ref.toLowerCase()) == 0 && st.refer.toLowerCase().compareTo(refer.toLowerCase()) == 0) {
-				return true;
-			}
+                return true;
+            }
         }     
         return false;
 	}

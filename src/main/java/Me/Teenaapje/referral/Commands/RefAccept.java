@@ -18,52 +18,52 @@ public class RefAccept extends CommandBase {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// check arguments
 		if (args.length > 2) {
-	        Utils.SendMessage(sender, core.config.tooManyArgs);
+	        Utils.sendMessage(sender, core.config.tooManyArgs);
 	        return false;
 	    } else if (args.length < 2) {
-	        Utils.SendMessage(sender, core.config.missingPlayer);
+	        Utils.sendMessage(sender, core.config.missingPlayer);
 	        return false;
 	    } 
 		
 		Player player = (Player)sender;
-		Player target = core.GetPlayer(args[1]);
+		Player target = core.getPlayer(args[1]);
 				
 		// is it the same
-		if (Utils.IsPlayerSelf(player, target)) {
-			Utils.SendMessage(player, core.config.acceptSelf);
+		if (Utils.isPlayerSelf(player, target)) {
+			Utils.sendMessage(player, core.config.acceptSelf);
 			return false;
 		}
 		
 		// check if in list
-		if (!core.rInvites.IsInList(player.getName(), args[1])) {
-			Utils.SendMessage(player, core.config.didntRef, target);
+		if (!core.rInvites.isInList(player.getName(), args[1])) {
+			Utils.sendMessage(player, core.config.didntRef, target);
 			return false;
 		}
 		
 		// check if online
 		if (!target.isOnline()) {
-			Utils.SendMessage(player, core.config.notOnline, target);
+			Utils.sendMessage(player, core.config.notOnline, target);
 	        return false;
 		}	
 		
 		// Check if player already referred a player 
-		if (core.db.PlayerReferrald(target.getUniqueId().toString(), target.getName())) {
-			Utils.SendMessage(player, core.config.alreadyRefed);
+		if (core.db.playerReferred(target.getUniqueId().toString(), target.getName())) {
+			Utils.sendMessage(player, core.config.alreadyRefed);
 	        return false;
 		}
 		
 		try { 
-	    	core.db.ReferralPlayer(target, player);
+	    	core.db.referralPlayer(target, player);
 	    	
 	    	// send msg to the one that send request
-			Utils.SendMessage(player, core.config.playerRef, target);
+			Utils.sendMessage(player, core.config.playerRef, target);
 			
 			// send the accept msg
-			Utils.SendMessage(target, core.config.playerAcceptedRef, player);
+			Utils.sendMessage(target, core.config.playerAcceptedRef, player);
 
 			// give rewards
-		    core.UseCommands(ConfigManager.playerRefers, player);
-		    core.UseCommands(ConfigManager.playerReferd, target);
+		    core.useCommands(ConfigManager.playerRefers, player);
+		    core.useCommands(ConfigManager.playerReferd, target);
 
 		    // check if the server wants to user milestone rewards
 			if (ConfigManager.useMileStoneRewards) {
@@ -71,15 +71,15 @@ public class RefAccept extends CommandBase {
 				String playerUUID = player.getUniqueId().toString();
 				String playerName = player.getName();
 
-				int playerLastReward = core.db.GetLastReward(playerUUID, playerName);
-				int playerReferrals = core.db.GetReferrals(playerUUID, playerName);
+				int playerLastReward = core.db.getLastReward(playerUUID, playerName);
+				int playerReferrals = core.db.getReferrals(playerUUID, playerName);
 
 				// check if he has a new milestone reward
-				if (core.milestone.HasAReward(playerLastReward, playerReferrals)) {
-					core.UseCommands(core.milestone.GetRewards(playerReferrals), player);
+				if (core.milestone.hasReward(playerLastReward, playerReferrals)) {
+					core.useCommands(core.milestone.getRewards(playerReferrals), player);
 				}
 			}
-			core.rInvites.RemoveFromList(player.getName(), args[1]);
+			core.rInvites.removeFromList(player.getName(), args[1]);
 		} catch (Exception e) {
 			e.fillInStackTrace();
 		}

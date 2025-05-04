@@ -1,23 +1,18 @@
 package me.teenaapje.referral.database;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-
+import me.teenaapje.referral.ReferralCore;
+import me.teenaapje.referral.utils.TopPlayer;
+import me.teenaapje.referral.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import me.teenaapje.referral.ReferralCore;
-import me.teenaapje.referral.utils.TopPlayer;
+import java.io.File;
+import java.io.IOException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 
 
 public class Database {
@@ -56,7 +51,7 @@ public class Database {
         // look if directory exists and create
         if (!dir.exists()) {
             if (!dir.mkdir()) {
-                System.out.println("Could not create directory for plugin: " + core.getDescription().getName());
+                Utils.logError("Could not create directory for plugin: " + core.getDescription().getName());
             }
         }
 
@@ -66,8 +61,7 @@ public class Database {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                Utils.logError("Error creating file in sqLiteSetup", e.getMessage());
             }
         }
 
@@ -78,10 +72,7 @@ public class Database {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + file);
 
-
             Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Connected to " + core.getConfig().getString("db") + " database");
-
-            return;
         } catch (SQLException ex) {
             core.getLogger().log(Level.SEVERE, "SQLite exception on initialize", ex);
         } catch (ClassNotFoundException ex) {
@@ -101,19 +92,11 @@ public class Database {
                     Class.forName("com.mysql.jdbc.driver");
                 }
 
-                setConnection(DriverManager.getConnection("jdbc:mysql://" +
-                                this.host + ":" +
-                                this.port + "/" +
-                                this.database +
-                                this.parameters,
-                        this.username,
-                        this.password));
+                setConnection(DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database + this.parameters, this.username, this.password));
                 Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Database Connected to " + core.getConfig().getString("db") + " for: " + core.getDescription().getName());
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (SQLException | ClassNotFoundException e) {
+            Utils.logInfo(e.getMessage());
         }
     }
 
@@ -126,12 +109,7 @@ public class Database {
     }
 
     private void createTable() {
-        String CreateTable = "CREATE TABLE IF NOT EXISTS " + table + "(" +
-                "  `UUID` varchar(40) NOT NULL," +
-                "  `NAME` varchar(40) NOT NULL," +
-                "  `REFERRED` varchar(40) DEFAULT NULL," +
-                "  `LASTREWARD` int(255) NOT NULL DEFAULT 0," +
-                "  `USERIP`	varchar(255) DEFAULT NULL)";
+        String CreateTable = "CREATE TABLE IF NOT EXISTS " + table + "(" + "  `UUID` varchar(40) NOT NULL," + "  `NAME` varchar(40) NOT NULL," + "  `REFERRED` varchar(40) DEFAULT NULL," + "  `LASTREWARD` int(255) NOT NULL DEFAULT 0," + "  `USERIP`	varchar(255) DEFAULT NULL)";
 
         try {
             Statement s = connection.createStatement();
@@ -139,11 +117,11 @@ public class Database {
             s.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            Utils.logInfo(e.getMessage());
         }
     }
 
-    public boolean PlayerExists(String uuid) {
+    public boolean playerExists(String uuid) {
         try {
             PreparedStatement statement = getConnection().prepareStatement("select * from " + table + " where UUID=?");
 
@@ -157,16 +135,15 @@ public class Database {
             statement.close();
 
         } catch (SQLException e) {
-            System.out.print("Error Function PlayerExists");
-            e.printStackTrace();
+            Utils.logInfo("Error Function PlayerExists", e.getMessage());
         }
 
         return false;
     }
 
-    public void CreatePlayer(String playerUUID, String playerName) {
+    public void createPlayer(String playerUUID, String playerName) {
         try {
-            if (PlayerExists(playerUUID)) {
+            if (playerExists(playerUUID)) {
                 return;
             }
             PreparedStatement insert = getConnection().prepareStatement("insert into " + table + " (UUID, NAME, REFERRED) values (?,?,?)");
@@ -180,19 +157,17 @@ public class Database {
             insert.close();
 
         } catch (SQLException e) {
-            System.out.print("Error Function CreatePlayer");
-            e.printStackTrace();
+            Utils.logInfo("Error Function CreatePlayer", e.getMessage());
         }
     }
 
-    public void ReferralPlayer(Player ref, Player refed) {
+    public void referralPlayer(Player ref, Player refed) {
         try {
             // check if the both players are added to the database
-            CreatePlayer(ref.getUniqueId().toString(), ref.getName());
-            CreatePlayer(refed.getUniqueId().toString(), refed.getName());
+            createPlayer(ref.getUniqueId().toString(), ref.getName());
+            createPlayer(refed.getUniqueId().toString(), refed.getName());
 
-            PreparedStatement update = getConnection()
-                    .prepareStatement("update " + table + " set REFERRED=?, USERIP=? where UUID=?");
+            PreparedStatement update = getConnection().prepareStatement("update " + table + " set REFERRED=?, USERIP=? where UUID=?");
 
             update.setString(1, refed.getUniqueId().toString());
             update.setString(2, ref.getAddress().getHostName());
@@ -202,15 +177,14 @@ public class Database {
             update.close();
 
         } catch (SQLException e) {
-            System.out.print("Error Function ReferralPlayer");
-            e.printStackTrace();
+            Utils.logInfo("Error Function referralPlayer", e.getMessage());
         }
     }
 
-    public boolean PlayerReferrald(String playerUUID, String playerName) {
+    public boolean playerReferred(String playerUUID, String playerName) {
         try {
-            if (!PlayerExists(playerUUID)) {
-                CreatePlayer(playerUUID, playerName);
+            if (!playerExists(playerUUID)) {
+                createPlayer(playerUUID, playerName);
             }
 
             PreparedStatement statement = getConnection().prepareStatement("select * from " + table + " where UUID=?");
@@ -226,16 +200,15 @@ public class Database {
             statement.close();
 
         } catch (SQLException e) {
-            System.out.print("Error Function playerReferrald");
-            e.printStackTrace();
+            Utils.logInfo("Error Function playerReferred", e.getMessage());
         }
 
         return true;
     }
 
-    public String PlayerReferraldBy(String playerUUID) {
+    public String playerReferredBy(String playerUUID) {
         try {
-            if (!PlayerExists(playerUUID)) {
+            if (!playerExists(playerUUID)) {
                 return null;
             }
 
@@ -252,16 +225,14 @@ public class Database {
             statement.close();
 
         } catch (SQLException e) {
-            System.out.print("Error Function playerReferrald");
-            e.printStackTrace();
+            Utils.logInfo("Error Function playerReferredBy", e.getMessage());
         }
-
         return null;
     }
 
-    public String PlayerReferraldByName(String playerUUID) {
+    public String playerReferredByName(String playerUUID) {
         try {
-            if (!PlayerExists(playerUUID)) {
+            if (!playerExists(playerUUID)) {
                 return "None";
             }
 
@@ -274,20 +245,16 @@ public class Database {
             if (result.next() && result.getString("ReferredBy") != null) {
                 return result.getString("ReferredBy");
             }
-
             statement.close();
-
         } catch (SQLException e) {
-            System.out.print("Error Function PlayerReferraldByName");
-            e.printStackTrace();
+            Utils.logInfo("Error Function playerReferredByName", e.getMessage());
         }
-
         return null;
     }
 
     public boolean PlayerReset(String player) {
         try {
-            if (!PlayerExists(player)) {
+            if (!playerExists(player)) {
                 return true;
             }
 
@@ -301,16 +268,14 @@ public class Database {
 
             return true;
         } catch (SQLException e) {
-            System.out.print("Error Function PlayerReset");
-            e.printStackTrace();
+            Utils.logInfo("Error Function PlayerReset", e.getMessage());
         }
-
         return false;
     }
 
     public boolean PlayerRemove(String player) {
         try {
-            if (!PlayerExists(player)) {
+            if (!playerExists(player)) {
                 return true;
             }
 
@@ -324,16 +289,14 @@ public class Database {
 
             return true;
         } catch (SQLException e) {
-            System.out.print("Error Function PlayerRemove");
-            e.printStackTrace();
+            Utils.logInfo("Error Function PlayerRemove", e.getMessage());
         }
-
         return false;
     }
 
-    public int GetReferrals(String playerUUID, String playerName) {
+    public int getReferrals(String playerUUID, String playerName) {
         try {
-            if (!PlayerExists(playerUUID)) {
+            if (!playerExists(playerUUID)) {
                 return 0;
             }
 
@@ -350,24 +313,21 @@ public class Database {
             statement.close();
 
         } catch (SQLException e) {
-            System.out.print("Error Function GetReferrals");
-            e.printStackTrace();
+            Utils.logInfo("Error Function getReferrals", e.getMessage());
         }
 
         return 0;
     }
 
-    public List<TopPlayer> GetTopPlayers(int min, int max) {
-        List<TopPlayer> topPlayer = new ArrayList<TopPlayer>();
+    public List<TopPlayer> getTopPlayers(int min, int max) {
+        List<TopPlayer> topPlayer = new ArrayList<>();
         try {
             PreparedStatement statement;
 
             if (dboption.compareTo("mysql") == 0) {
-                statement = getConnection().prepareStatement("SELECT U.UUID, U.NAME, (SELECT count(*)from " + table + " US WHERE US.REFERRED=U.UUID) as REFTOTAL "
-                        + " FROM " + table + " U ORDER BY REFTOTAL DESC, NAME ASC LIMIT ?, ?");
+                statement = getConnection().prepareStatement("SELECT U.UUID, U.NAME, (SELECT count(*)from " + table + " US WHERE US.REFERRED=U.UUID) as REFTOTAL " + " FROM " + table + " U ORDER BY REFTOTAL DESC, NAME ASC LIMIT ?, ?");
             } else {
-                statement = getConnection().prepareStatement("SELECT U.UUID, U.NAME, (SELECT count(*)from [" + table + "] US WHERE US.REFERRED=U.UUID) as REFTOTAL "
-                        + " FROM " + table + " U ORDER BY REFTOTAL DESC, NAME ASC LIMIT ?, ?");
+                statement = getConnection().prepareStatement("SELECT U.UUID, U.NAME, (SELECT count(*)from [" + table + "] US WHERE US.REFERRED=U.UUID) as REFTOTAL " + " FROM " + table + " U ORDER BY REFTOTAL DESC, NAME ASC LIMIT ?, ?");
             }
 
             statement.setInt(1, min);
@@ -388,16 +348,15 @@ public class Database {
             return topPlayer;
 
         } catch (SQLException e) {
-            System.out.print("Error Function GetReferrals");
-            e.printStackTrace();
+            Utils.logInfo("Error Function getTopPlayers", e.getMessage());
         }
 
         return topPlayer;
     }
 
-    public int GetLastReward(String playerUUID, String playerName) {
+    public int getLastReward(String playerUUID, String playerName) {
         try {
-            if (!PlayerExists(playerUUID)) {
+            if (!playerExists(playerUUID)) {
                 return 0;
             }
 
@@ -414,16 +373,15 @@ public class Database {
             statement.close();
 
         } catch (SQLException e) {
-            System.out.print("Error Function GetLastReward");
-            e.printStackTrace();
+            Utils.logInfo("Error Function getLastReward", e.getMessage());
         }
 
         return 0;
     }
 
-    public int GetUsedRefIP(String playerUUID, String ip) {
+    public int getUsedReferralIP(String playerUUID, String ip) {
         try {
-            if (!PlayerExists(playerUUID)) {
+            if (!playerExists(playerUUID)) {
                 return 0;
             }
 
@@ -441,14 +399,13 @@ public class Database {
             statement.close();
 
         } catch (SQLException e) {
-            System.out.print("Error Function GetUsedRefIP");
-            e.printStackTrace();
+            Utils.logInfo("Error Function getUsedReferralIP", e.getMessage());
         }
 
         return 0;
     }
 
-    public boolean ResetAll() {
+    public void resetAll() {
         try {
             PreparedStatement statement = getConnection().prepareStatement("update " + table + " set REFERRED=null, LASTREWARD=0, USERIP=null");
 
@@ -456,16 +413,13 @@ public class Database {
 
             statement.close();
 
-            return true;
         } catch (SQLException e) {
-            System.out.print("Error Function ResetAll");
-            e.printStackTrace();
+            Utils.logInfo("Error Function resetAll", e.getMessage());
         }
 
-        return false;
     }
 
-    public boolean RemoveAll() {
+    public void removeAll() {
         try {
             PreparedStatement statement = getConnection().prepareStatement("delete from " + table);
 
@@ -473,22 +427,18 @@ public class Database {
 
             statement.close();
 
-            return true;
         } catch (SQLException e) {
-            System.out.print("Error Function RemoveAll");
-            e.printStackTrace();
+            Utils.logInfo("Error Function removeAll", e.getMessage());
         }
 
-        return false;
     }
 
-    public void LastRewardUpdate(Player player, int lastReward) {
+    public void lastRewardUpdate(Player player, int lastReward) {
         try {
             // check if the both players are added to the database
-            CreatePlayer(player.getUniqueId().toString(), player.getName());
+            createPlayer(player.getUniqueId().toString(), player.getName());
 
-            PreparedStatement update = getConnection()
-                    .prepareStatement("update " + table + " set LASTREWARD=? where UUID=?");
+            PreparedStatement update = getConnection().prepareStatement("update " + table + " set LASTREWARD=? where UUID=?");
 
             update.setInt(1, lastReward);
             update.setString(2, player.getUniqueId().toString());
@@ -497,15 +447,13 @@ public class Database {
             update.close();
 
         } catch (SQLException e) {
-            System.out.print("Error Function ReferralPlayer");
-            e.printStackTrace();
+            Utils.logInfo("Error Function lastRewardUpdate", e.getMessage());
         }
     }
 
-    public int GetPlayerPosition(String name) {
+    public int getPlayerPosition(String name) {
         try {
-            PreparedStatement statement = getConnection()
-                    .prepareStatement("SELECT (SELECT COUNT(*) FROM " + table + " US WHERE US.NAME <= U.NAME) AS position FROM " + table + " U WHERE U.NAME=?");
+            PreparedStatement statement = getConnection().prepareStatement("SELECT (SELECT COUNT(*) FROM " + table + " US WHERE US.NAME <= U.NAME) AS position FROM " + table + " U WHERE U.NAME=?");
 
             statement.setString(1, name);
 
@@ -518,19 +466,17 @@ public class Database {
             statement.close();
 
         } catch (SQLException e) {
-            System.out.print("Error Function ReferralPlayer");
-            e.printStackTrace();
+            Utils.logInfo("Error Function getPlayerPosition", e.getMessage());
         }
 
         return 999999;
     }
 
-    public void CloseConnection() {
+    public void closeConnection() {
         try {
             connection.close();
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Utils.logInfo("Error Function closeConnection", e.getMessage());
         }
     }
 }

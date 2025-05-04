@@ -31,7 +31,7 @@ public class CommandBase {
 				return true;
 			} else {
 				if (sendmsg) {
-					Utils.SendMessage((Player)sender, core.config.noPerm);
+					Utils.sendMessage((Player)sender, core.config.noPerm);
 				}
 				return false;
 			}

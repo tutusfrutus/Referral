@@ -19,10 +19,10 @@ public class RefTop extends CommandBase {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// get top players
-		List<TopPlayer> topPlayers = core.db.GetTopPlayers(0,9);
+		List<TopPlayer> topPlayers = core.db.getTopPlayers(0,9);
 		
 		for (TopPlayer topPlayer : topPlayers) {
-			Utils.SendMessage(sender, topPlayer.playerPos + " - " + topPlayer.playerName + " : " + topPlayer.totalRefers);
+			Utils.sendMessage(sender, topPlayer.playerPos + " - " + topPlayer.playerName + " : " + topPlayer.totalRefers);
 		}
 		
 		return true;

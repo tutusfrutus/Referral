@@ -19,13 +19,13 @@ public class RefAdmin extends CommandBase {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// check arguments
 		if (args.length > 3) {
-	        Utils.SendMessage(sender, core.config.tooManyArgs);
+	        Utils.sendMessage(sender, core.config.tooManyArgs);
 	        return false;
 	    } else if (args.length >= 2 && args.length < 3) {
-	        Utils.SendMessage(sender, core.config.missingPlayer);
+	        Utils.sendMessage(sender, core.config.missingPlayer);
 	        return false;
 	    } else if (args.length < 2) {
-	        Utils.SendMessage(sender, core.config.missingArgs);
+	        Utils.sendMessage(sender, core.config.missingArgs);
 	        return false;
 	    } 
 		
@@ -34,39 +34,39 @@ public class RefAdmin extends CommandBase {
 		case "remove":
 			// remove player from database
 			if (args[2].compareTo("*") == 0) {
-				core.db.RemoveAll();
-				Utils.SendMessage(sender, core.config.allRemoved);
+				core.db.removeAll();
+				Utils.sendMessage(sender, core.config.allRemoved);
 			} else {
-				Player player = core.GetPlayer(args[2]);
+				Player player = core.getPlayer(args[2]);
 
 				if (player != null && RemovePlayer(player)) {
 					// Player removed
-					Utils.SendMessage(sender, core.config.playerRemoved, player);
+					Utils.sendMessage(sender, core.config.playerRemoved, player);
 				} else {
 					// Player removed failed
-					Utils.SendMessage(sender, core.config.playerRemovedFailed, player);
+					Utils.sendMessage(sender, core.config.playerRemovedFailed, player);
 				}
 			}
 			break;
 		case "reset":
 			// reset player
 			if (args[2].compareTo("*") == 0) {
-				core.db.ResetAll();
-				Utils.SendMessage(sender, core.config.allReset);
+				core.db.resetAll();
+				Utils.sendMessage(sender, core.config.allReset);
 			} else {
-				Player player = core.GetPlayer(args[2]);
+				Player player = core.getPlayer(args[2]);
 
 				if (player != null && ResetPlayer(player)) {
 					// Player reset
-					Utils.SendMessage(sender, core.config.playerReset, player);
+					Utils.sendMessage(sender, core.config.playerReset, player);
 				} else {
 					// Player reset failed
-					Utils.SendMessage(sender, core.config.playerResetFailed, player);
+					Utils.sendMessage(sender, core.config.playerResetFailed, player);
 				}
 			}
 			break;
 		default:
-			Utils.SendMessage(sender, "&cIncorrect use of command");
+			Utils.sendMessage(sender, "&cIncorrect use of command");
 			break;
 		}
 		return true;
